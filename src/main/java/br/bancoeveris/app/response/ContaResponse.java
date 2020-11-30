@@ -19,14 +19,6 @@ public class ContaResponse extends BaseResponse{
 		this.statusCode = statusCode;
 	}
 	
-	public ContaResponse(Long id, String nome, String hash, Double saldo) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.hash = hash;
-		this.saldo = saldo;
-	}
-	
 	public Long getId() {
 		return id;
 	}

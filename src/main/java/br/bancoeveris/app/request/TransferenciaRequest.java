@@ -24,5 +24,8 @@ public class TransferenciaRequest {
 	public void setValor(Double valor) {
 		this.valor = valor;
 	}
+	public TransferenciaRequest() {
+		
+	}
 
 }

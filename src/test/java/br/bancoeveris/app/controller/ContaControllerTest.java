@@ -34,6 +34,7 @@ public class ContaControllerTest {
 		static ContaResponse response = new ContaResponse();
 		static ContaRequest request = new ContaRequest();
 		static ListContaResponse listContaResponse = new ListContaResponse();
+		Gson gson = new Gson();
 		
 		@Autowired
 		private ContaController contaController;
@@ -60,7 +61,6 @@ public class ContaControllerTest {
 		@Test
 		public void deveRetornarSucesso_QuandoCriarConta() {
 			
-			Gson gson = new Gson();
 			response.setStatusCode(201);
 			response.setMessage("OK");
 			
@@ -72,6 +72,34 @@ public class ContaControllerTest {
 					.post("/contas")
 				.then()
 					.statusCode(HttpStatus.CREATED.value());
+		}
+		@Test
+		public void deveRetornarErro500_QuandoCriarConta() {
+			
+			response.setStatusCode(201);
+			response.setMessage("OK");
+			
+			//when(this.contaService.inserir(Mockito.any())).thenReturn(response);
+			
+			given().contentType("application/json").body(gson.toJson(request))
+				
+				.when()
+					.post("/contas")
+				.then()
+					.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		}
+		
+		@Test
+		public void deveRetornarErro400_QuandoCriarConta() {
+			
+			when(this.contaService.inserir(Mockito.any())).thenReturn(new ContaResponse(null,null,null,null,400));
+			
+			given().contentType("application/json").body(gson.toJson(request))
+				
+				.when()
+					.post("/contas")
+				.then()
+					.statusCode(HttpStatus.BAD_REQUEST.value());
 		}
 		
 		@Test
@@ -232,6 +260,35 @@ public class ContaControllerTest {
 					.get("/contas/saldo/{hash}","123456")
 				.then()
 					.statusCode(HttpStatus.BAD_REQUEST.value());
+		}
+		
+		@Test
+		public void deveRetornarSucesso_QuandoAtualizarConta() {
+			
+			when(this.contaService.atualizar(Mockito.any(), Mockito.any())).thenReturn(new BaseResponse(200,"Sucesso"));
+			
+			given()
+				.contentType("application/json")
+				.body(gson.toJson(request))
+			.when()
+				.put("/contas/{id}",1L)
+			.then()
+				.statusCode(HttpStatus.OK.value());
+			
+		}
+		@Test
+		public void deveRetornarErro500_QuandoAtualizarConta() {
+			
+			//when(this.contaService.atualizar(Mockito.any(), Mockito.any())).thenReturn(new BaseResponse(200,"Sucesso"));
+			
+			given()
+				.contentType("application/json")
+				.body(gson.toJson(request))
+			.when()
+				.put("/contas/{id}",1L)
+			.then()
+				.statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			
 		}
 	
 	
